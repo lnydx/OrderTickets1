@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+	<bean name="/Log" class="bit.jeffy.action.LogAction" singleton="false">
+		<property name="userdao">
+			<ref bean="userdao"/>
+		</property>
+	</bean>
+	<bean name="/Reg" class="bit.jeffy.action.RegAction" singleton="false">
+		<property name="regdao">
+			<ref bean="regdao"/>
+		</property>
+	</bean>
+	<bean id="shopcar" class="bit.jeffy.business.ShoppingCar" singleton="false">
+		<property name="cardao">
+			<ref bean="cardao"/>
+		</property>
+	</bean>
+</beans>

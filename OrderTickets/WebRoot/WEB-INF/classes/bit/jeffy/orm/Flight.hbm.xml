@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD//EN" 
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+                                                 
+<hibernate-mapping>
+     <class name="bit.jeffy.orm.Flight" table="flights" lazy="false">
+         <id name="id" column="ID" type="long">
+           <generator class="increment"/>
+         </id>
+         
+         <property name="flight_no" column="FLIGHT_NO" type="string" not-null="true"/>
+         <property name="start_place" column="START_PLACE" type="string" not-null="true"/>
+         <property name="end_place" column="END_PLACE" type="string" not-null="true"/>
+         <property name="time" column="TIME" type="int" not-null="true"/>
+         <property name="price" column="PRICE" type="double" not-null="true"/>
+     </class>
+</hibernate-mapping>

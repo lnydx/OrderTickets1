@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+    <!--DataBase Configuration-->
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+		<property name="driverClassName">
+			<value>com.mysql.jdbc.Driver</value>
+		</property>
+		<property name="url">
+			<value>jdbc:mysql://localhost:3306/orderticket</value>
+		</property>
+		<property name="username">
+			<value>root</value>
+		</property>
+		<property name="password">
+			<value>root</value>
+		</property>
+	</bean>
+	<bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+		<property name="dataSource">
+			<ref bean="dataSource"/>
+		</property>
+		<property name="mappingResources">
+			<list>
+				<value>bit/jeffy/orm/Flight.hbm.xml</value>
+				<value>bit/jeffy/orm/User.hbm.xml</value>	
+				<value>bit/jeffy/orm/OrderItem.hbm.xml</value>
+				<value>bit/jeffy/orm/Order.hbm.xml</value>	
+				<value>bit/jeffy/orm/Admin.hbm.xml</value>	
+			</list>
+		</property>
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+				<prop key="hibernate.show_sql">true</prop>
+			</props>
+		</property>
+	</bean>
+	<bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+		<property name="sessionFactory">
+			<ref local="sessionFactory" />
+		</property>
+	</bean>	
+	<bean id="userDAOProxy" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+		<property name="transactionManager">
+			<ref bean="transactionManager" />
+		</property>
+		<property name="target">
+			<list>
+				<ref local="userdao" />
+				<ref local="adminlog" />
+				<ref local="regdao" />
+				<ref local="cardao" />
+				<ref local="retrievedao" />
+				<ref local="purchasedao" />
+				<ref local="managedao" />
+				<ref local="flightdao" />
+				<ref local="readdao" />
+				<ref local="itemdao" />
+			</list>
+		</property>
+		<property name="transactionAttributes">
+			<props>
+				<prop key="insert*">PROPAGATION_REQUIRED</prop>
+				<prop key="get*">PROPAGATION_REQUIRED,readOnly</prop>
+				<prop key="is*">PROPAGATION_REQUIRED,readOnly</prop>
+			</props>
+		</property>
+	</bean>	
+	<bean id="hibernateTemplate" class="org.springframework.orm.hibernate3.HibernateTemplate">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory"/>
+		</property>
+	</bean>
+	
+	<!--Dao Configuration-->
+	<bean id="userdao" class="bit.jeffy.dao.LogUserDao">
+		<property name="sessionFactory">
+			<ref local="sessionFactory"/>
+		</property>
+	</bean>
+	<bean id="adminlog" class="bit.jeffy.dao.AdminLogDao">
+		<property name="sessionFactory">
+			<ref local="sessionFactory"/>
+		</property>
+	</bean>
+	<bean id="regdao" class="bit.jeffy.dao.RegUserDao">
+		<property name="sessionFactory">
+			<ref local="sessionFactory"/>
+		</property>
+	</bean>
+	<bean id="cardao" class="bit.jeffy.dao.ShoppingCarDao">
+		<property name="sessionFactory">
+			<ref local="sessionFactory"/>
+		</property>
+	</bean>
+	<bean id="retrievedao" class="bit.jeffy.dao.RetrieveTicketsDao">
+		<property name="sessionFactory">
+			<ref local="sessionFactory"/>
+		</property>
+	</bean>
+	<bean id="purchasedao" class="bit.jeffy.dao.PurchaseDao">
+		<property name="sessionFactory">
+			<ref local="sessionFactory"/>
+		</property>
+	</bean>
+	<bean id="managedao" class="bit.jeffy.dao.ManageUserDao">
+		<property name="sessionFactory">
+			<ref local="sessionFactory"/>
+		</property>
+	</bean>
+	<bean id="flightdao" class="bit.jeffy.dao.CreateFlightDao">
+		<property name="sessionFactory">
+			<ref local="sessionFactory"/>
+		</property>
+	</bean>
+	<bean id="readdao" class="bit.jeffy.dao.ReadFlightDao">
+		<property name="sessionFactory">
+			<ref local="sessionFactory"/>
+		</property>
+	</bean>
+	<bean id="itemdao" class="bit.jeffy.dao.CreateOrderItemDao">
+		<property name="sessionFactory">
+			<ref local="sessionFactory"/>
+		</property>
+	</bean>
+	
+	<!--Action Configuration-->
+	<bean name="/Log" class="bit.jeffy.action.LogAction" singleton="false">
+		<property name="userdao">
+			<ref bean="userdao"/>
+		</property>
+	</bean>
+	<bean name="/AdminLog" class="bit.jeffy.action.AdminLogAction" singleton="false">
+		<property name="adminlog">
+			<ref bean="adminlog"/>
+		</property>
+	</bean>
+	<bean name="/Reg" class="bit.jeffy.action.RegAction" singleton="false">
+		<property name="regdao">
+			<ref bean="regdao"/>
+		</property>
+	</bean>
+	<bean name="/Retrieve" class="bit.jeffy.action.RetrieveTicketsAction" singleton="false">
+		<property name="retrievedao">
+			<ref bean="retrievedao"/>
+		</property>
+	</bean>
+	<bean name="/Purchase" class="bit.jeffy.action.PurchaseAction" singleton="false">
+		<property name="purchasedao">
+			<ref bean="purchasedao"/>
+		</property>
+	</bean>
+	<bean name="/PurchaseReturn" class="bit.jeffy.action.PurchaseReturnAction" singleton="false"/>
+	<bean name="/IndexReturn" class="bit.jeffy.action.IndexReturnAction" singleton="false"/>
+	<bean name="/ManageUserAct" class="bit.jeffy.action.ManageUserAction" singleton="false">
+		<property name="managedao">
+			<ref bean="managedao"/>
+		</property>
+	</bean>
+	<bean name="/CreateFlight" class="bit.jeffy.action.CreateFlightAction" singleton="false">
+		<property name="flightdao">
+			<ref bean="flightdao"/>
+		</property>
+	</bean>
+	<bean name="/ReadFlight" class="bit.jeffy.action.ReadFlightAction" singleton="false">
+		<property name="readdao">
+			<ref bean="readdao"/>
+		</property>
+	</bean>
+	<bean name="/CreateOrderItem" class="bit.jeffy.action.CreateOrderItemAction" singleton="false">
+		<property name="itemdao">
+			<ref bean="itemdao"/>
+		</property>
+	</bean>
+	
+	<!--Business Configuration-->
+	<bean id="shopcar" class="bit.jeffy.business.ShoppingCar" singleton="false">
+		<property name="cardao">
+			<ref bean="cardao"/>
+		</property>
+	</bean>
+	<bean id="purchase" class="bit.jeffy.business.Purchase" singleton="false">
+		<property name="purchasedao">
+			<ref bean="purchasedao"/>
+		</property>
+	</bean>
+</beans>

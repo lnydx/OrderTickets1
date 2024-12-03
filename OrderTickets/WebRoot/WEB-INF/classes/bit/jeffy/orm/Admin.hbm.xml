@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD//EN" 
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+                                                 
+<hibernate-mapping>
+     <class name="bit.jeffy.orm.Admin" table="admin" lazy="false">
+         <id name="id" column="ID" type="long">
+           <generator class="increment"/>
+         </id>
+         
+         <property name="admin_no" column="ADMIN_NO" type="string" not-null="true"/>
+         <property name="password" column="PASSWORD" type="string" not-null="true"/>
+     </class>
+</hibernate-mapping>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD//EN" 
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+                                                 
+<hibernate-mapping>
+     <class name="bit.jeffy.orm.OrderItem" table="orderitems" lazy="false">
+         <id name="id" column="ID" type="long">
+           <generator class="increment"/>
+         </id>
+         
+         <property name="date" column="DATE" type="java.sql.Date" not-null="true"/>
+         
+         <many-to-one
+            name="flight"
+            column="flight_id"
+            class="bit.jeffy.orm.Flight"
+            not-null="true"/>
+     </class>
+</hibernate-mapping>
